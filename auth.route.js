@@ -8,6 +8,6 @@ const authRoute = Router();
 
 authRoute.post('/register', validateBody(registerSchema), register);
 authRoute.post('/login', validateBody(loginSchema), login);
-authRoute.get('/me', authMiddleware, getMe);
+authRoute.get('/getme', authMiddleware, getMe);
 
 export default authRoute;
