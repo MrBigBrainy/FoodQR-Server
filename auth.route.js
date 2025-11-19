@@ -7,8 +7,7 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 const authRoute = Router();
 
 authRoute.post('/register', validateBody(registerSchema), register);
-authRoute.post('/login', validateBody(loginSchema), login);
-authRoute.get('/getme', authMiddleware, getMe);
-0000
+authRoute.post('/logintap', validateBody(loginSchema), login);
+authRoute.get('/getmeme', authMiddleware, getMe);
 
 export default authRoute;
