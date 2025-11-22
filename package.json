@@ -20,6 +20,8 @@
   "homepage": "https://github.com/MrBigBrainy/FoodQR-Server#readme",
   "description": "",
   "dependencies": {
+    "@prisma/adapter-mariadb": "^7.0.0",
+    "@prisma/client": "^7.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
