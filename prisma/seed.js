@@ -1,6 +1,21 @@
-import { PrismaClient } from './generated/client';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PrismaClient } from '@prisma/client';
+import dotenv from "dotenv"
 
-const prisma = new PrismaClient();
+dotenv.config()
+
+console.log(process.env.DATABASE_URL)
+
+const adapter = new PrismaMariaDb({
+    host: "shuttle.proxy.rlwy.net",
+    user: "root",
+    password: "kpNUEDZxNEQbtwsuvVDsxuBwIfDOBZbV",
+    database: "railway",
+    port: 19622,
+    connectionLimit: 5,
+    connectTimeout: 20000
+})
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
     // ---- 1. สร้าง SuperAdmin ----
