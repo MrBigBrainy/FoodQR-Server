@@ -6,16 +6,152 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "./generated"
+
+  // output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "mysql"
 }
 
-model Test {
-  id   Int    @id @default(autoincrement())
-  name String
+// ─────────── ADMIN ───────────
+model Admin {
+  id       Int    @id @default(autoincrement())
+  name     String
+  username String @unique
+  password String
+  role     Role   @default(admin)
+
+  stores Store[]
 }
 
-test
+enum Role {
+  admin
+  superadmin
+}
+
+// ─────────── STORE ───────────
+model Store {
+  id            Int      @id @default(autoincrement())
+  name          String
+  address       String?
+  vat           Float?
+  serviceCharge Float?
+  createAt      DateTime @default(now())
+
+  adminId Int
+  admin   Admin @relation(fields: [adminId], references: [id])
+
+  tables    Table[]
+  menus     Menu[]
+  discounts Discount[]
+  bills     Bill[]
+  TableType TableType[]
+}
+
+// ─────────── TABLE TYPE ───────────
+model TableType {
+  id       Int    @id @default(autoincrement())
+  nameType String
+  minSeat  Int
+  maxSeat  Int
+  storeId  Int
+
+  store  Store   @relation(fields: [storeId], references: [id])
+  tables Table[]
+}
+
+// ─────────── TABLE ───────────
+model Table {
+  id          Int     @id @default(autoincrement())
+  zone        String?
+  tableTypeId Int
+  storeId     Int
+
+  store     Store     @relation(fields: [storeId], references: [id])
+  tableType TableType @relation(fields: [tableTypeId], references: [id])
+  orders    Order[]
+}
+
+// ─────────── CATEGORY ───────────
+model Category {
+  id     Int     @id @default(autoincrement())
+  name   String
+  detail String?
+
+  menus Menu[]
+}
+
+// ─────────── MENU ───────────
+model Menu {
+  id            Int     @id @default(autoincrement())
+  name          String
+  price         Float
+  detail        String?
+  discountPrice Float?
+  categoryId    Int
+  storeId       Int
+
+  store      Store       @relation(fields: [storeId], references: [id])
+  category   Category    @relation(fields: [categoryId], references: [id])
+  orderUsers OrderUser[]
+}
+
+// ─────────── DISCOUNT ───────────
+model Discount {
+  id        Int       @id @default(autoincrement())
+  code      String    @unique
+  expiredAt DateTime
+  maxCount  Int?
+  startTime DateTime?
+  endTime   DateTime?
+  isActive  Boolean   @default(true)
+  storeId   Int
+
+  store  Store   @relation(fields: [storeId], references: [id])
+  orders Order[]
+}
+
+// ─────────── ORDER ───────────
+model Order {
+  id          Int       @id @default(autoincrement())
+  tableId     Int
+  orderUserId Int?
+  openTime    DateTime
+  closeTime   DateTime?
+  subtotal    Float?
+  total       Float?
+  discountId  Int?
+  status      String?
+
+  table      Table       @relation(fields: [tableId], references: [id])
+  discount   Discount?   @relation(fields: [discountId], references: [id])
+  orderUsers OrderUser[]
+  bill       Bill?       @relation(fields: [billId], references: [id])
+  billId     Int?
+}
+
+// ─────────── ORDER USER ───────────
+model OrderUser {
+  id       Int @id @default(autoincrement())
+  menuId   Int
+  quantity Int
+  orderId  Int
+
+  order Order @relation(fields: [orderId], references: [id])
+  menu  Menu  @relation(fields: [menuId], references: [id])
+}
+
+// ─────────── BILL ───────────
+model Bill {
+  id      Int    @id @default(autoincrement())
+  userId  Int?
+  status  String
+  total   Float
+  orderId Int
+
+  Store   Store?  @relation(fields: [storeId], references: [id])
+  storeId Int?
+  Order   Order[]
+}
