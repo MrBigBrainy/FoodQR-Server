@@ -62,12 +62,20 @@ model TableType {
   tables Table[]
 }
 
+enum statusTable {
+  available
+  in_use
+  call_staff
+  pay_bill
+}
+
 // ─────────── TABLE ───────────
 model Table {
-  id          Int     @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   zone        String?
   tableTypeId Int
   storeId     Int
+  status      statusTable @default(available)
 
   store     Store     @relation(fields: [storeId], references: [id])
   tableType TableType @relation(fields: [tableTypeId], references: [id])
