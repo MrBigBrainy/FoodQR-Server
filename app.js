@@ -48,12 +48,18 @@ app.post("/api/omise", async (req, res) => {
         const omiseResponse = await createCharge(sourceOmise, 100, 1);
 
         const additionalDataToStoreInSchema = {
-            payment_method: "promptpay, rabbit_line_pay",
+            payment_method: "promptpay",
             chargeId: omiseResponse.id
         }
-        // console.log("omiseResponse", omiseResponse);
+        console.log("omiseResponse", omiseResponse);
 
-        return res.json({ redirectUrl: omiseResponse.authorize_uri, response: omiseResponse });
+        return res.json({
+            qrUrl: omiseResponse.source.scannable_code.image.download_uri,
+            amount: omiseResponse.amount,
+            status: omiseResponse.status,
+            chargeId: omiseResponse.id,
+        });
+
     } catch (err) {
         console.error("Omise charge error:", err);
         return res.status(500).json({
