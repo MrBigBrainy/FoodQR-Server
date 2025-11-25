@@ -51,7 +51,7 @@ app.post("/api/omise", async (req, res) => {
             payment_method: "promptpay, rabbit_line_pay",
             chargeId: omiseResponse.id
         }
-        // console.log("omiseResponse", omiseResponse);
+        console.log("omiseResponse", omiseResponse);
 
         return res.json({ redirectUrl: omiseResponse.authorize_uri, response: omiseResponse });
     } catch (err) {
