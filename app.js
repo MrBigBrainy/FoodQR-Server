@@ -4,6 +4,7 @@ import { authRouter } from "./src/router/auth.route.js";
 import { adminRouter } from "./src/router/admin.route.js";
 import omiseFactory from "omise";
 import dotenv from "dotenv";
+import storeRouter from "./src/router/store.route.js";
 
 dotenv.config()
 
@@ -12,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
+app.use("/api/store", storeRouter);
 
 app.post("/api/omise", async (req, res) => {
     const omise = omiseFactory({

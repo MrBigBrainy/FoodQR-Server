@@ -1,23 +1,14 @@
 // scripts/seedMenu.ts
-import { categories, menu, menuTypes } from "./schema.js";
+import { categories, menu, menuTypes, admins, stores } from "./schema.js";
 import { sql } from "drizzle-orm";
-import mysql from "mysql2/promise";
-import { drizzle } from "drizzle-orm/mysql2";
 import dotenv from "dotenv"
+import { db } from "./db.js";
 
 dotenv.config()
 
-// Create MySQL pool using DATABASE_URL (Railway)
-const pool = mysql.createPool({
-    uri: process.env.DATABASE_URL,
-});
-
-// Create Drizzle DB client
-const db = drizzle(pool, { schema: { categories, menu, menuTypes }, mode: "default" });
 
 const DEFAULT_STORE_ID = 1;
 
-// 1) Category seed (fixed ids so we can map easily)
 const CATEGORY_SEED = [
     { id: 1, name: "ซูชิ", detail: "ซูชิคำเดี่ยว" },
     { id: 2, name: "ชุดเซทซูชิ", detail: "ชุดเซทซูชิ" },
@@ -31,7 +22,6 @@ const MENUTYPE_SEED = [
     { id: 2, name: "เครื่องดื่ม", storeId: DEFAULT_STORE_ID },
 ];
 
-// 2) Menu seed (from your sheet)
 const MENU_SEED = [
     {
         menuId: "A01",
@@ -280,10 +270,31 @@ const MENU_SEED = [
 ];
 
 export async function seedMenu() {
-    console.log("🗑️ Clearing menus & categories...");
+    console.log("🗑️ Clearing data...");
     await db.execute(sql`DELETE FROM Menu`);
-    await db.execute(sql`DELETE FROM Category`);
     await db.execute(sql`DELETE FROM MenuType`);
+    await db.execute(sql`DELETE FROM Category`);
+    await db.execute(sql`DELETE FROM Store`);
+    await db.execute(sql`DELETE FROM Admin`);
+
+    console.log("👤 Inserting admin...");
+    await db.insert(admins).values({
+        id: 1,
+        name: "Admin User",
+        username: "admin",
+        password: "password123",
+        role: "admin"
+    });
+
+    console.log("🏪 Inserting store...");
+    await db.insert(stores).values({
+        id: DEFAULT_STORE_ID,
+        name: "Sushi Store",
+        address: "123 Sushi St",
+        vat: 7.0,
+        serviceCharge: 10.0,
+        adminId: 1
+    });
 
     console.log("🍣 Inserting categories...");
     await db.insert(categories).values(CATEGORY_SEED);
@@ -323,7 +334,6 @@ export async function seedMenu() {
     console.log("✅ Menu seed finished!");
 }
 
-// if run directly: `node scripts/seedMenu.js`
 seedMenu()
     .catch((err) => {
         console.error("❌ Seed error:", err);
