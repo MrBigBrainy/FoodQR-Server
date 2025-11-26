@@ -1,19 +1,20 @@
 import { db } from "../../drizzle/db.js";
-import { menu } from "../../drizzle/schema.js";
+import { menu, category } from "../../drizzle/schema.js";
 import { eq } from "drizzle-orm";
 
 export async function getMenuByStoreId(storeId) {
-    const items = await db
-        .select({
-            id: menu.id,
-            name: menu.name,
-            detail: menu.detail,
-            price: menu.price,
-            imageUrl: menu.imageUrl
-            // category: menu.category,
-        })
-        .from(menu)
-        .where(eq(menu.storeId, storeId));
+    const menuData = await db.query.menu.findMany({
+        where: eq(menu.storeId, storeId),
+        with: {
+            category: true,
+        }
+    })
+    return menuData
+}
 
-    return items;
+export async function getCategoryByStoreId(storeId) {
+    const categoryData = await db.query.category.findMany({
+        where: eq(category.storeId, storeId),
+    })
+    return categoryData
 }

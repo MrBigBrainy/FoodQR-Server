@@ -10,11 +10,11 @@ dotenv.config()
 const DEFAULT_STORE_ID = 1;
 
 const CATEGORY_SEED = [
-    { id: 1, name: "ซูชิ", detail: "ซูชิคำเดี่ยว" },
-    { id: 2, name: "ชุดเซทซูชิ", detail: "ชุดเซทซูชิ" },
-    { id: 3, name: "ชุดปาร์ตี้", detail: "ชุดปาร์ตี้สำหรับหลายคน" },
-    { id: 4, name: "ซาชิมิ", detail: "ซาชิมิ" },
-    { id: 5, name: "เครื่องดื่ม", detail: "เมนูเครื่องดื่ม" },
+    { id: 1, name: "ซูชิ", detail: "ซูชิคำเดี่ยว", storeId: DEFAULT_STORE_ID },
+    { id: 2, name: "ชุดเซทซูชิ", detail: "ชุดเซทซูชิ", storeId: DEFAULT_STORE_ID },
+    { id: 3, name: "ชุดปาร์ตี้", detail: "ชุดปาร์ตี้สำหรับหลายคน", storeId: DEFAULT_STORE_ID },
+    { id: 4, name: "ซาชิมิ", detail: "ซาชิมิ", storeId: DEFAULT_STORE_ID },
+    { id: 5, name: "เครื่องดื่ม", detail: "เมนูเครื่องดื่ม", storeId: DEFAULT_STORE_ID },
 ];
 
 const MENUTYPE_SEED = [

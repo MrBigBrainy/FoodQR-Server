@@ -1,4 +1,3 @@
-// src/db/schema.ts
 import {
     mysqlTable,
     int,
@@ -51,6 +50,7 @@ export const storesRelations = relations(stores, ({ one, many }) => ({
     bills: many(bills),
     tableTypes: many(tableTypes),
     menuTypes: many(menuTypes),
+    category: many(category),
 }));
 
 // ─────────── TABLE TYPE ───────────
@@ -91,13 +91,18 @@ export const tablesRelations = relations(tables, ({ one, many }) => ({
 }));
 
 // ─────────── CATEGORY ───────────
-export const categories = mysqlTable("Category", {
+export const category = mysqlTable("Category", {
     id: int("id").primaryKey().autoincrement(),
     name: varchar("name", { length: 255 }).notNull(),
     detail: text("detail"),
+    storeId: int("storeId").notNull(),
 });
 
-export const categoriesRelations = relations(categories, ({ many }) => ({
+export const categoryRelations = relations(category, ({ one, many }) => ({
+    store: one(stores, {
+        fields: [category.storeId],
+        references: [stores.id],
+    }),
     menu: many(menu),
 }));
 
@@ -120,9 +125,9 @@ export const menuRelations = relations(menu, ({ one, many }) => ({
         fields: [menu.storeId],
         references: [stores.id],
     }),
-    category: one(categories, {
+    category: one(category, {
         fields: [menu.categoryId],
-        references: [categories.id],
+        references: [category.id],
     }),
     menuType: one(menuTypes, {
         fields: [menu.menuTypeId],
