@@ -49,6 +49,7 @@ model Store {
   bills     Bill[]
   TableType TableType[]
   zone      Zone[]
+  menuType  MenuType[]
 }
 
 // ─────────── TABLE TYPE ───────────
