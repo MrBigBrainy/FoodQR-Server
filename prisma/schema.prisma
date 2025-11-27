@@ -8,7 +8,7 @@ generator client {
   provider = "prisma-client-js"
   // output   = "./generated"
 
-  // output   = "../generated/prisma"
+  output = "../generated/prisma"
 }
 
 datasource db {
@@ -48,7 +48,7 @@ model Store {
   discounts Discount[]
   bills     Bill[]
   TableType TableType[]
-  menuTypes MenuType[]
+  zone      Zone[]
 }
 
 // ─────────── TABLE TYPE ───────────
@@ -73,14 +73,24 @@ enum statusTable {
 // ─────────── TABLE ───────────
 model Table {
   id          Int         @id @default(autoincrement())
-  zone        String?
-  tableTypeId Int
+  tableName   String //add tablename
   storeId     Int
+  tableTypeId Int
+  zoneId      Int? //add zoneId
   status      statusTable @default(available)
 
   store     Store     @relation(fields: [storeId], references: [id])
   tableType TableType @relation(fields: [tableTypeId], references: [id])
+  zone      Zone?     @relation(fields: [zoneId], references: [id]) // << ต้องมี zoneId
   orders    Order[]
+}
+
+model Zone {
+  id       Int     @id @default(autoincrement())
+  zoneName String
+  storeId  Int
+  table    Table[]
+  store    Store   @relation(fields: [storeId], references: [id])
 }
 
 // ─────────── CATEGORY ───────────
