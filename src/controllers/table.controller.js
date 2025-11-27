@@ -7,7 +7,8 @@ tableController.getAllTables = async (req, res, next) => {
   res.status(200).json({ message: 'get all tables', tables });
 };
 tableController.getTableById = async (req, res, next) => {
-  const { id } = req.params;
+  const idParams = req.params.id;
+  const id = Number(idParams);
   const { table } = await tableService.getTableById(id);
   res.status(200).json({ message: 'get table by id', table });
 };

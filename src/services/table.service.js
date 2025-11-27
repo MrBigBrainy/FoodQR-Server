@@ -17,7 +17,6 @@ tableService.createTable = async (tableName, zoneId, tableTypeId, storeId) => {
   const table = await prisma.table.create({
     data: {
       tableName,
-
       store: {
         connect: { id: storeId },
       },
