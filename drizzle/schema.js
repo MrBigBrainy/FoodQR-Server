@@ -13,6 +13,7 @@ import { relations } from "drizzle-orm";
 
 // ─────────── ENUMS ───────────
 export const roleEnum = mysqlEnum("role", ["admin", "superadmin"]);
+export const statusTableEnum = mysqlEnum("statusTable", ["available", "in_use", "call_staff", "pay_bill"]);
 
 // ─────────── ADMIN ───────────
 export const admins = mysqlTable("Admin", {
@@ -35,7 +36,6 @@ export const stores = mysqlTable("Store", {
     vat: float("vat"),
     serviceCharge: float("serviceCharge"),
     createAt: timestamp("createAt").notNull().defaultNow(),
-
     adminId: int("adminId").notNull(),
 });
 
@@ -51,6 +51,7 @@ export const storesRelations = relations(stores, ({ one, many }) => ({
     tableTypes: many(tableTypes),
     menuTypes: many(menuTypes),
     category: many(category),
+    zones: many(zones),
 }));
 
 // ─────────── TABLE TYPE ───────────
@@ -70,12 +71,30 @@ export const tableTypesRelations = relations(tableTypes, ({ one, many }) => ({
     tables: many(tables),
 }));
 
+// ─────────── ZONE (New) ───────────
+export const zones = mysqlTable("Zone", {
+    id: int("id").primaryKey().autoincrement(),
+    zoneName: varchar("zoneName", { length: 255 }).notNull(),
+    storeId: int("storeId").notNull(),
+});
+
+export const zonesRelations = relations(zones, ({ one, many }) => ({
+    store: one(stores, {
+        fields: [zones.storeId],
+        references: [stores.id],
+    }),
+    tables: many(tables),
+}));
+
 // ─────────── TABLE ───────────
 export const tables = mysqlTable("Table", {
     id: int("id").primaryKey().autoincrement(),
-    zone: varchar("zone", { length: 255 }),
+    tableName: varchar("tableName", { length: 255 }),
+    zone: varchar("zone", { length: 255 }), // Kept for backward compatibility
+    zoneId: int("zoneId"),
     tableTypeId: int("tableTypeId").notNull(),
     storeId: int("storeId").notNull(),
+    status: statusTableEnum.default("available"),
 });
 
 export const tablesRelations = relations(tables, ({ one, many }) => ({
@@ -86,6 +105,10 @@ export const tablesRelations = relations(tables, ({ one, many }) => ({
     tableType: one(tableTypes, {
         fields: [tables.tableTypeId],
         references: [tableTypes.id],
+    }),
+    zone: one(zones, {
+        fields: [tables.zoneId],
+        references: [zones.id],
     }),
     orders: many(orders),
 }));
@@ -175,7 +198,7 @@ export const discountsRelations = relations(discounts, ({ one, many }) => ({
 export const orders = mysqlTable("Order", {
     id: int("id").primaryKey().autoincrement(),
     tableId: int("tableId").notNull(),
-    orderUserId: int("orderUserId"), // keep as-is (no relation in Prisma either)
+    orderUserId: int("orderUserId"),
     openTime: datetime("openTime").notNull(),
     closeTime: datetime("closeTime"),
     subtotal: float("subtotal"),
@@ -235,7 +258,6 @@ export const billsRelations = relations(bills, ({ one, many }) => ({
         fields: [bills.storeId],
         references: [stores.id],
     }),
-    // In Prisma, Bill has Order[]; we model it as:
     orders: many(orders),
 }));
 

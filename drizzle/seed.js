@@ -276,7 +276,7 @@ export async function seedMenu() {
     await db.delete(tables);        // DELETE FROM `Table`
     await db.delete(tableTypes);    // DELETE FROM `TableType`
     await db.delete(menu);
-    await db.delete(menuTypes);
+    // await db.delete(menuTypes);
     await db.delete(category);
     await db.delete(stores);
     await db.delete(admins);

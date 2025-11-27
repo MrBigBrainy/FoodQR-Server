@@ -4,9 +4,10 @@ import { authRouter } from './src/router/auth.route.js';
 import { adminRouter } from './src/router/admin.route.js';
 import omiseFactory from 'omise';
 import dotenv from 'dotenv';
-import { tableTypeRouter } from './src/router/tableType.route.js';
-import { tableRouter } from './src/router/table.route.js';
+// import { tableTypeRouter } from './src/router/tableType.route.js';
+// import { tableRouter } from './src/router/table.route.js';
 import errorMiddleware from './src/middlewares/error.middleware.js';
+import storeRouter from './src/router/store.route.js';
 
 dotenv.config();
 
@@ -16,15 +17,14 @@ app.use(express.json());
 app.use(cors());
 
 // ─────────── TABLE ───────────//
-app.use('/api/table-types', tableTypeRouter);
-app.use('/api/tables', tableRouter);
+// app.use('/api/table-types', tableTypeRouter);
+// app.use('/api/tables', tableRouter);
 
 app.post('/api/omise', async (req, res) => {
     const omise = omiseFactory({
         secretKey: process.env.OMISE_SECRET_KEY,
         omiseVersion: '2019-05-29',
     });
-    app.use('/api/store', storeRouter);
 
     try {
         const sourceOmise = req.body.source;
@@ -73,7 +73,7 @@ app.post('/api/omise', async (req, res) => {
         });
     }
 });
-
+app.use('/api/store', storeRouter);
 app.use('/auth', authRouter);
 app.use('/admin', adminRouter);
 
