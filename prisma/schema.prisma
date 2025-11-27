@@ -104,17 +104,26 @@ model Category {
 
 // ─────────── MENU ───────────
 model Menu {
-  id            Int     @id @default(autoincrement())
-  name          String
-  price         Float
-  detail        String?
-  discountPrice Float?
-  categoryId    Int
-  storeId       Int
+  id         Int     @id @default(autoincrement())
+  name       String
+  price      Float
+  detail     String?
+  discount   Float?
+  netPrice   Float
+  categoryId Int
+  storeId    Int
 
   store      Store       @relation(fields: [storeId], references: [id])
   category   Category    @relation(fields: [categoryId], references: [id])
   orderUsers OrderUser[]
+}
+
+model MenuType {
+  id      Int    @id @default(autoincrement())
+  name    String
+  storeId Int
+
+  store Store @relation(fields: [storeId], references: [id])
 }
 
 // ─────────── DISCOUNT ───────────
