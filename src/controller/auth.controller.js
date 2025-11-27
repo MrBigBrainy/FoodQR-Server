@@ -14,7 +14,6 @@ export async function login(req, res, next) {
         return next(createHttpError(400, "username and password are required"));
     }
 
-    // ---- 1. Find staff by username ----
     const foundStaff = await db
         .select()
         .from(staff)
@@ -28,7 +27,6 @@ export async function login(req, res, next) {
         return;
     }
 
-    // ---- 2. Check existing non-expired refresh token ----
     const existingTokens = await db
         .select()
         .from(refreshTokens)
@@ -44,6 +42,9 @@ export async function login(req, res, next) {
             .status(400)
             .json({ message: "You are already logged in on this device" });
     }
+    await prisma.refreshToken.delete({
+        where: { id: userToken.id }
+    });
 
     // ---- 3. Check password ----
     const isMatch = await bcrypt.compare(password, staffMember.password);

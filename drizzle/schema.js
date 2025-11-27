@@ -262,7 +262,7 @@ export const billsRelations = relations(bills, ({ one, many }) => ({
 }));
 
 // ─────────── REFRESH TOKEN ───────────
-export const refreshTokens = mysqlTable("refresh_tokens", {
+export const refreshTokens = mysqlTable("RefreshToken", {
     id: int("id").primaryKey().autoincrement(),
     token: varchar("token", { length: 255 }).notNull(),
     staffId: int("staff_id").notNull(),
@@ -270,7 +270,7 @@ export const refreshTokens = mysqlTable("refresh_tokens", {
 });
 
 // ─────────── STAFF ───────────
-export const staff = mysqlTable("staff", {
+export const staff = mysqlTable("Staff", {
     id: int("id").primaryKey().autoincrement(),
     username: varchar("username", { length: 191 }).notNull().unique(),
     password: varchar("password", { length: 255 }).notNull(),
