@@ -238,3 +238,19 @@ export const billsRelations = relations(bills, ({ one, many }) => ({
     // In Prisma, Bill has Order[]; we model it as:
     orders: many(orders),
 }));
+
+// ─────────── REFRESH TOKEN ───────────
+export const refreshTokens = mysqlTable("refresh_tokens", {
+    id: int("id").primaryKey().autoincrement(),
+    token: varchar("token", { length: 255 }).notNull(),
+    staffId: int("staff_id").notNull(),
+    expiresAt: datetime("expires_at").notNull(),
+});
+
+// ─────────── STAFF ───────────
+export const staff = mysqlTable("staff", {
+    id: int("id").primaryKey().autoincrement(),
+    username: varchar("username", { length: 191 }).notNull().unique(),
+    password: varchar("password", { length: 255 }).notNull(),
+    role: varchar("role", { length: 191 }).notNull(),
+});
