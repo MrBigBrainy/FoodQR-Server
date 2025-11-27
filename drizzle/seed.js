@@ -3,6 +3,7 @@ import { category, menu, menuTypes, admins, stores } from "./schema.js";
 import { sql } from "drizzle-orm";
 import dotenv from "dotenv"
 import { db } from "./db.js";
+import { tableTypes, tables } from "./schema.js";
 
 dotenv.config()
 
@@ -271,11 +272,14 @@ const MENU_SEED = [
 
 export async function seedMenu() {
     console.log("🗑️ Clearing data...");
-    await db.execute(sql`DELETE FROM Menu`);
-    await db.execute(sql`DELETE FROM MenuType`);
-    await db.execute(sql`DELETE FROM Category`);
-    await db.execute(sql`DELETE FROM Store`);
-    await db.execute(sql`DELETE FROM Admin`);
+
+    await db.delete(tables);        // DELETE FROM `Table`
+    await db.delete(tableTypes);    // DELETE FROM `TableType`
+    await db.delete(menu);
+    await db.delete(menuTypes);
+    await db.delete(category);
+    await db.delete(stores);
+    await db.delete(admins);
 
     console.log("👤 Inserting admin...");
     await db.insert(admins).values({
@@ -297,7 +301,7 @@ export async function seedMenu() {
     });
 
     console.log("🍣 Inserting categories...");
-    await db.insert(categories).values(CATEGORY_SEED);
+    await db.insert(category).values(CATEGORY_SEED);
 
     console.log("📑 Inserting menu types...");
     await db.insert(menuTypes).values(MENUTYPE_SEED);
