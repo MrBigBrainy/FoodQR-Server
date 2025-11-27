@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 import { tableTypeRouter } from './src/router/tableType.route.js';
 import { tableRouter } from './src/router/table.route.js';
 import errorMiddleware from './src/middlewares/error.middleware.js';
-import storeRouter from "./src/router/store.route.js";
 
 dotenv.config();
 
@@ -25,7 +24,7 @@ app.post('/api/omise', async (req, res) => {
         secretKey: process.env.OMISE_SECRET_KEY,
         omiseVersion: '2019-05-29',
     });
-    app.use("/api/store", storeRouter);
+    app.use('/api/store', storeRouter);
 
     try {
         const sourceOmise = req.body.source;
