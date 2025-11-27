@@ -1,5 +1,5 @@
 // scripts/seedMenu.ts
-import { categories, menu, menuTypes, admins, stores } from "./schema.js";
+import { category, menu, menuTypes, admins, stores } from "./schema.js";
 import { sql } from "drizzle-orm";
 import dotenv from "dotenv"
 import { db } from "./db.js";
