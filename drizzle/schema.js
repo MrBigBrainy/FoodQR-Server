@@ -175,15 +175,20 @@ export const menuTypesRelations = relations(menuTypes, ({ one, many }) => ({
 }));
 
 // ─────────── DISCOUNT ───────────
+
+export const discountTypeEnum = mysqlEnum("discountType", ["percent", "baht"]);
 export const discounts = mysqlTable("Discount", {
-    id: int("id").primaryKey().autoincrement(),
-    code: varchar("code", { length: 255 }).notNull().unique(),
-    expiredAt: datetime("expiredAt").notNull(),
-    maxCount: int("maxCount"),
-    startTime: datetime("startTime"),
-    endTime: datetime("endTime"),
-    isActive: boolean("isActive").notNull().default(true),
-    storeId: int("storeId").notNull(),
+  id: int("id").primaryKey().autoincrement(),
+  code: varchar("code", { length: 255 }).notNull().unique(),
+  discountType: discountTypeEnum.notNull().default("percent"), 
+  amount: int("amount").notNull(), 
+  expiredAt: datetime("expiredAt").notNull(),
+  maxCount: int("maxCount"), 
+  count: int("count").notNull().default(0), 
+  startTime: datetime("startTime"),
+  endTime: datetime("endTime"),
+  isActive: boolean("isActive").notNull().default(true),
+  storeId: int("storeId").notNull(),
 });
 
 export const discountsRelations = relations(discounts, ({ one, many }) => ({

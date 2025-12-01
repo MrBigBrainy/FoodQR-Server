@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 // import { tableRouter } from './src/router/table.route.js';
 import errorMiddleware from "./src/middlewares/error.middleware.js";
 import storeRouter from "./src/router/store.route.js";
+import discountRouter from "./src/router/discount.route.js";
 
 dotenv.config();
 
@@ -74,7 +75,8 @@ app.post("/api/omise", async (req, res) => {
   }
 });
 app.use('/api/store', storeRouter);
-app.use('/auth', authRouter);
+app.use('/api/discount', discountRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
 
 app.use(errorMiddleware);
