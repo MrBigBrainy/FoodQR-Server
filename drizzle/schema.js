@@ -230,6 +230,8 @@ export const orderUsers = mysqlTable("OrderUser", {
     menuId: int("menuId").notNull(),
     quantity: int("quantity").notNull(),
     orderId: int("orderId").notNull(),
+    note: text("note"),
+    lineId: varchar("lineId", { length: 255 }),
 });
 
 export const orderUsersRelations = relations(orderUsers, ({ one }) => ({
@@ -242,6 +244,7 @@ export const orderUsersRelations = relations(orderUsers, ({ one }) => ({
         references: [menu.id],
     }),
 }));
+
 
 // ─────────── BILL ───────────
 export const bills = mysqlTable("Bill", {
@@ -275,4 +278,10 @@ export const staff = mysqlTable("Staff", {
     username: varchar("username", { length: 191 }).notNull().unique(),
     password: varchar("password", { length: 255 }).notNull(),
     role: varchar("role", { length: 191 }).notNull(),
+});
+
+// ─────────── USER ───────────
+export const users = mysqlTable("User", {
+    id: int("id").primaryKey().autoincrement(),
+    lineId: varchar("lineId", { length: 255 }).notNull().unique(),
 });

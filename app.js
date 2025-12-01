@@ -73,9 +73,9 @@ app.post("/api/omise", async (req, res) => {
     });
   }
 });
-app.use("/api/store", storeRouter);
-app.use("/auth", authRouter);
-app.use("/admin", adminRouter);
+app.use('/api/store', storeRouter);
+app.use('/auth', authRouter);
+app.use('/api/admin', adminRouter);
 
 app.use(errorMiddleware);
 
