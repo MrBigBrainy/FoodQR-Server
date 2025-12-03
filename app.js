@@ -8,6 +8,7 @@ import { tableTypeRouter } from './src/router/tableType.route.js';
 import { tableRouter } from './src/router/table.route.js';
 import errorMiddleware from './src/middlewares/error.middleware.js';
 import storeRouter from './src/router/store.route.js';
+import { discountRouter } from './src/router/discount.route.js';
 
 dotenv.config();
 
