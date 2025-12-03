@@ -2,7 +2,7 @@ import { db } from "../../drizzle/db.js";
 import { discounts } from "../../drizzle/schema.js";
 import { eq, and } from "drizzle-orm";
 
-export async function validateDiscountService({storeId, code}) {
+export async function validateDiscountService({ storeId, code }) {
   if (!code || typeof code !== "string") {
     const error = new Error("Discount code is required");
     error.statusCode = 400;
@@ -19,9 +19,9 @@ export async function validateDiscountService({storeId, code}) {
   const now = new Date();
 
   const whereClauses = [
-    eq(discounts.code, normalizedCode), 
-    eq(discounts.isActive, true), 
-    eq(discounts.storeId, Number(storeId))
+    eq(discounts.code, normalizedCode),
+    eq(discounts.isActive, true),
+    eq(discounts.storeId, Number(storeId)),
   ];
 
   const [discount] = await db
@@ -76,7 +76,31 @@ export async function validateDiscountService({storeId, code}) {
     count: discount.count,
     startTime: discount.startTime,
     endTime: discount.endTime,
-    remainingUses
+    remainingUses,
   };
 }
 
+export async function addCoupon({
+  code,
+  discountType,
+  amount,
+  maxCount,
+  startTime,
+  endTime,
+  storeId,
+}) {
+  try {
+    const [newCoupon] = await db.insert(discounts).values({
+      code,
+      discountType,
+      amount,
+      maxCount,
+      startTime,
+      endTime,
+      storeId,
+    });
+    return newCoupon;
+  } catch (error) {
+    console.log(error);
+  }
+}
