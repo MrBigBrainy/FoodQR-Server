@@ -17,10 +17,10 @@ import { userOrderRouter } from "./src/router/userOrder.route.js";
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app); // VERY IMPORTANT
+const server = http.createServer(app); 
 const io = new Server(server, {
   cors: {
-    origin: "*",   // you can restrict to your frontend later
+    origin: "*",   
   },
 });
 io.on("connection", (socket) => {

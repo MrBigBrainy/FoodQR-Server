@@ -58,7 +58,7 @@ export const storesRelations = relations(stores, ({ one, many }) => ({
 // ─────────── TABLE TYPE ───────────
 export const tableTypes = mysqlTable("TableType", {
     id: int("id").primaryKey().autoincrement(),
-    nameType: varchar("nameType", { length: 255 }).notNull(),
+    nameType: varchar("nameType", { length: 255 }).notNull().unique(),
     minSeat: int("minSeat").notNull(),
     maxSeat: int("maxSeat").notNull(),
     storeId: int("storeId").notNull(),
@@ -75,7 +75,7 @@ export const tableTypesRelations = relations(tableTypes, ({ one, many }) => ({
 // ─────────── ZONE (New) ───────────
 export const zones = mysqlTable("Zone", {
     id: int("id").primaryKey().autoincrement(),
-    zoneName: varchar("zoneName", { length: 255 }).notNull(),
+    zoneName: varchar("zoneName", { length: 255 }).notNull().unique(),
     storeId: int("storeId").notNull(),
 });
 
@@ -157,7 +157,7 @@ export const menuRelations = relations(menu, ({ one, many }) => ({
         fields: [menu.menuTypeId],
         references: [menuTypes.id],
     }),
-    orderUsers: many(orderUsers),
+    userOrders: many(userOrders),
 }));
 
 // ─────────── MENUTYPE ───────────
@@ -210,7 +210,7 @@ export const discountsRelations = relations(discounts, ({ one, many }) => ({
 export const orders = mysqlTable("Order", {
     id: int("id").primaryKey().autoincrement(),
     tableId: int("tableId").notNull(),
-    orderUserId: int("orderUserId"),
+    userOrderId: int("userOrderId"),
     openTime: datetime("openTime").notNull(),
     closeTime: datetime("closeTime"),
     subtotal: float("subtotal"),
@@ -229,7 +229,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
         fields: [orders.discountId],
         references: [discounts.id],
     }),
-    orderUsers: many(orderUsers),
+    userOrders: many(userOrders),
     bill: one(bills, {
         fields: [orders.billId],
         references: [bills.id],
@@ -237,7 +237,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
 }));
 
 // ─────────── ORDER USER ───────────
-export const orderUsers = mysqlTable("OrderUser", {
+export const userOrders = mysqlTable("UserOrder", {
     id: int("id").primaryKey().autoincrement(),
     menuId: int("menuId").notNull(),
     quantity: int("quantity").notNull(),
@@ -246,13 +246,13 @@ export const orderUsers = mysqlTable("OrderUser", {
     lineId: varchar("lineId", { length: 255 }),
 });
 
-export const orderUsersRelations = relations(orderUsers, ({ one }) => ({
+export const userOrdersRelations = relations(userOrders, ({ one }) => ({
     order: one(orders, {
-        fields: [orderUsers.orderId],
+        fields: [userOrders.orderId],
         references: [orders.id],
     }),
     menu: one(menu, {
-        fields: [orderUsers.menuId],
+        fields: [userOrders.menuId],
         references: [menu.id],
     }),
 }));
