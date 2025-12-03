@@ -1,10 +1,12 @@
 import { validateDiscountService } from "../service/discount.service.js";
 
 export async function validateDiscount(req, res) {
+   
   try {
-    const { code, storeId } = req.body;
-
-    const result = await validateDiscountService({ storeId, code });
+    const { discountCode, storeId } = req.body;
+     
+    const result = await validateDiscountService({ storeId, discountCode });
+    console.log("result", result)
 
     return res.json({
       status: "success",
