@@ -46,3 +46,93 @@
 // };
 
 // export { tableController };
+
+import { tableService } from '../services/table.service.js';
+
+const tableController = {};
+
+// GET ALL TABLES
+tableController.getAllTables = async (req, res, next) => {
+  try {
+    const { tables } = await tableService.getAllTables();
+    res.status(200).json({
+      message: 'get all tables successful',
+      tables,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET TABLE BY ID
+tableController.getTableById = async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ message: 'Invalid ID' });
+
+    const { table } = await tableService.getTableById(id);
+
+    if (!table)
+      return res.status(404).json({ message: `Table ${id} not found` });
+
+    res.status(200).json({
+      message: 'get table by id successful',
+      table,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// CREATE TABLE
+tableController.createTable = async (req, res, next) => {
+  try {
+    const { tableName, zoneId, tableTypeId, storeId } = req.body;
+
+    const { table } = await tableService.createTable(
+      tableName,
+      zoneId,
+      tableTypeId,
+      storeId
+    );
+
+    res.status(201).json({
+      message: 'create table successful',
+      table,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// UPDATE TABLE
+tableController.updateTable = async (req, res, next) => {
+  const id = Number(req.params.id);
+  const { tableName, zoneId, tableTypeId, storeId } = req.body;
+
+  const { table } = await tableService.updateTable(
+    id,
+    tableName,
+    zoneId,
+    tableTypeId,
+    storeId
+  );
+
+  res.status(200).json({
+    message: 'update table',
+    table,
+  });
+};
+
+// DELETE TABLE
+tableController.deleteTable = async (req, res, next) => {
+  const id = Number(req.params.id);
+
+  const { table } = await tableService.deleteTable(id);
+
+  res.status(200).json({
+    message: 'delete table',
+    table,
+  });
+};
+
+export { tableController };

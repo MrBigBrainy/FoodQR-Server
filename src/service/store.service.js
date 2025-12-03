@@ -4,7 +4,6 @@ import { eq } from "drizzle-orm";
 
 export async function getMenuByStoreId(storeId) {
   try {
-    console.log("test por", storeId);
     const menuData = await db.query.menu.findMany({
       where: eq(menu.storeId, storeId),
       with: {
