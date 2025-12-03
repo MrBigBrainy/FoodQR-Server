@@ -9,12 +9,40 @@ import { tableRouter } from './src/router/table.route.js';
 import errorMiddleware from './src/middlewares/error.middleware.js';
 import storeRouter from './src/router/store.route.js';
 import { discountRouter } from './src/router/discount.route.js';
+import http from 'http';
+import { Server } from 'socket.io';   
 import { userOrderRouter } from "./src/router/userOrder.route.js";
 
 
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app); // VERY IMPORTANT
+const io = new Server(server, {
+  cors: {
+    origin: "*",   // you can restrict to your frontend later
+  },
+});
+io.on("connection", (socket) => {
+  console.log("A client connected:", socket.id);
+
+  socket.on("joinTable", ({ tableId }) => {
+    const roomName = `table-${tableId}`;
+    socket.join(roomName);
+    console.log(`Socket ${socket.id} joined ${roomName}`);
+  });
+
+  socket.on("leaveTable", ({ tableId }) => {
+    const roomName = `table-${tableId}`;
+    socket.leave(roomName);
+    console.log(`Socket ${socket.id} left ${roomName}`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  });
+});
+
 
 app.use(express.json());
 app.use(cors());
@@ -84,4 +112,4 @@ app.use("/api/admin", adminRouter);
 
 app.use(errorMiddleware);
 
-app.listen(3000, () => console.log("SERVER IS STARTING AT PORT 3000"));
+server.listen(3000, () => console.log("SERVER IS STARTING AT PORT 3000"));

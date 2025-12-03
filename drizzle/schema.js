@@ -8,6 +8,7 @@ import {
     timestamp,
     datetime,
     mysqlEnum,
+    uniqueIndex,
 } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
@@ -179,7 +180,7 @@ export const menuTypesRelations = relations(menuTypes, ({ one, many }) => ({
 export const discountTypeEnum = mysqlEnum("discountType", ["percent", "baht"]);
 export const discounts = mysqlTable("Discount", {
   id: int("id").primaryKey().autoincrement(),
-  code: varchar("code", { length: 255 }).notNull().unique(),
+  code: varchar("code", { length: 255 }).notNull(),
   discountType: discountTypeEnum.notNull().default("percent"), 
   amount: int("amount").notNull(), 
   maxCount: int("maxCount"), 
@@ -188,7 +189,14 @@ export const discounts = mysqlTable("Discount", {
   endTime: datetime("endTime"),
   isActive: boolean("isActive").notNull().default(true),
   storeId: int("storeId").notNull(),
-});
+},(table) => {
+    return {
+      codeStoreUnique: uniqueIndex("code_store_unique").on(
+        table.code,
+        table.storeId
+      ),
+    };
+  });
 
 export const discountsRelations = relations(discounts, ({ one, many }) => ({
     store: one(stores, {
