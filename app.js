@@ -1,14 +1,3 @@
-import express from "express";
-import cors from "cors";
-import { authRouter } from "./src/router/auth.route.js";
-import { adminRouter } from "./src/router/admin.route.js";
-import omiseFactory from "omise";
-import dotenv from "dotenv";
-// import { tableTypeRouter } from './src/router/tableType.route.js';
-// import { tableRouter } from './src/router/table.route.js';
-import errorMiddleware from "./src/middlewares/error.middleware.js";
-import storeRouter from "./src/router/store.route.js";
-import { userOrderRouter } from "./src/router/userOrder.route.js";
 import express from 'express';
 import cors from 'cors';
 import { authRouter } from './src/router/auth.route.js';
@@ -20,6 +9,8 @@ import { tableRouter } from './src/router/table.route.js';
 import errorMiddleware from './src/middlewares/error.middleware.js';
 import storeRouter from './src/router/store.route.js';
 import { discountRouter } from './src/router/discount.route.js';
+import { userOrderRouter } from "./src/router/userOrder.route.js";
+
 
 dotenv.config();
 
@@ -86,13 +77,10 @@ app.post('/api/omise', async (req, res) => {
     }
 });
 app.use("/api/store", storeRouter);
-app.use("/auth", authRouter);
-app.use("/api/admin", adminRouter);
 app.use("/api/userOrder", userOrderRouter);
-app.use('/api/store', storeRouter);
-app.use('/api/discount', discountRouter);
-app.use('/api/auth', authRouter);
-app.use('/api/admin', adminRouter);
+app.use("/api/discount", discountRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
 
 app.use(errorMiddleware);
 
