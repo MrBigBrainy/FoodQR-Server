@@ -179,7 +179,7 @@ export const menuTypesRelations = relations(menuTypes, ({ one, many }) => ({
 export const discountTypeEnum = mysqlEnum("discountType", ["percent", "baht"]);
 export const discounts = mysqlTable("Discount", {
   id: int("id").primaryKey().autoincrement(),
-  code: varchar("code", { length: 255 }).notNull().unique(),
+  code: varchar("code", { length: 255 }).notNull(),
   discountType: discountTypeEnum.notNull().default("percent"), 
   amount: int("amount").notNull(), 
   maxCount: int("maxCount"), 
