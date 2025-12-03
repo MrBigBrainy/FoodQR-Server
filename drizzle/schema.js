@@ -8,6 +8,7 @@ import {
     timestamp,
     datetime,
     mysqlEnum,
+    uniqueIndex,
 } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
@@ -188,7 +189,14 @@ export const discounts = mysqlTable("Discount", {
   endTime: datetime("endTime"),
   isActive: boolean("isActive").notNull().default(true),
   storeId: int("storeId").notNull(),
-});
+},(table) => {
+    return {
+      codeStoreUnique: uniqueIndex("code_store_unique").on(
+        table.code,
+        table.storeId
+      ),
+    };
+  });
 
 export const discountsRelations = relations(discounts, ({ one, many }) => ({
     store: one(stores, {
