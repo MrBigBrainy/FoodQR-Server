@@ -182,7 +182,6 @@ export const discounts = mysqlTable("Discount", {
   code: varchar("code", { length: 255 }).notNull().unique(),
   discountType: discountTypeEnum.notNull().default("percent"), 
   amount: int("amount").notNull(), 
-  expiredAt: datetime("expiredAt").notNull(),
   maxCount: int("maxCount"), 
   count: int("count").notNull().default(0), 
   startTime: datetime("startTime"),
