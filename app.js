@@ -15,7 +15,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-
+//test
 // ─────────── TABLE ───────────//
 app.use('/api/admin/table-types', tableTypeRouter);
 app.use('/api/admin/tables', tableRouter);
@@ -74,9 +74,10 @@ app.post('/api/omise', async (req, res) => {
   }
 });
 app.use('/api/store', storeRouter);
-app.use('/auth', authRouter);
-app.use('/admin', adminRouter);
+app.use('/api/discount', discountRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/admin', adminRouter);
 
 app.use(errorMiddleware);
 
-app.listen(3000, () => console.log('SERVER IS STARTING AT PORT 3000'));
+app.listen(3000, () => console.log("SERVER IS STARTING AT PORT 3000"));
