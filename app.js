@@ -12,6 +12,7 @@ import { discountRouter } from './src/router/discount.route.js';
 import http from 'http';
 import { Server } from 'socket.io';   
 import { userOrderRouter } from "./src/router/userOrder.route.js";
+import orderRouter from "./src/router/order.route.js";
 
 
 dotenv.config();
@@ -108,6 +109,7 @@ app.use("/api/store", storeRouter);
 app.use("/api/userOrder", userOrderRouter);
 app.use("/api/discount", discountRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/order", orderRouter);
 app.use("/api/admin", adminRouter);
 
 app.use(errorMiddleware);

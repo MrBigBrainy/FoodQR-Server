@@ -10,6 +10,7 @@ import {
     mysqlEnum,
     uniqueIndex,
 } from "drizzle-orm/mysql-core";
+import { sql } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 
 // ─────────── ENUMS ───────────
@@ -207,16 +208,15 @@ export const discountsRelations = relations(discounts, ({ one, many }) => ({
 }));
 
 // ─────────── ORDER ───────────
-export const orders = mysqlTable("Order", {
+export const orders = mysqlTable("Orders", {
     id: int("id").primaryKey().autoincrement(),
     tableId: int("tableId").notNull(),
-    userOrderId: int("userOrderId"),
-    openTime: datetime("openTime").notNull(),
+    openTime: datetime("openTime").notNull().default(sql`CURRENT_TIMESTAMP`),
     closeTime: datetime("closeTime"),
     subtotal: float("subtotal"),
     total: float("total"),
     discountId: int("discountId"),
-    status: varchar("status", { length: 255 }),
+    status: varchar("status", { length: 255 }).default("กำลังใช้งาน"),
     billId: int("billId"),
 });
 
