@@ -1,15 +1,15 @@
 import { createOrderService } from "../service/order.service.js";
 
 export async function createOrder(req, res) {
-  const { tableId } = req.body;
+  const data = req.body;
 
-  if (!tableId) {
+  if (!data) {
     return res.status(400).json({
       message: "Invalid order",
     });
   }
   try {
-      const order = await createOrderService(tableId);
+      const order = await createOrderService(data);
       console.log(order)
 
     return res.status(201).json({

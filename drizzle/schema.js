@@ -211,6 +211,8 @@ export const discountsRelations = relations(discounts, ({ one, many }) => ({
 export const orders = mysqlTable("Orders", {
     id: int("id").primaryKey().autoincrement(),
     tableId: int("tableId").notNull(),
+    storeId: int("storeId").notNull(),
+    customerCount: int("customerCount").notNull(),
     openTime: datetime("openTime").notNull().default(sql`CURRENT_TIMESTAMP`),
     closeTime: datetime("closeTime"),
     subtotal: float("subtotal"),
