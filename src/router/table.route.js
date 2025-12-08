@@ -5,8 +5,8 @@ const tableRouter = express.Router();
 tableRouter.get('/', tableController.getAllTables);
 tableRouter.get('/:id', tableController.getTableById);
 tableRouter.post('/', tableController.createTable);
-tableRouter.patch('/:id', tableController.updateTable);
 tableRouter.patch('/status', tableController.updateTableStatus);
+tableRouter.patch('/:id', tableController.updateTable);
 tableRouter.delete('/:id', tableController.deleteTable);
 
 export { tableRouter };

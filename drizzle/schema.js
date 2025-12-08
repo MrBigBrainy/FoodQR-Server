@@ -89,7 +89,7 @@ export const zonesRelations = relations(zones, ({ one, many }) => ({
 }));
 
 // ─────────── TABLE ───────────
-export const tables = mysqlTable("Table", {
+export const tables = mysqlTable("Tables", {
     id: int("id").primaryKey().autoincrement(),
     tableName: varchar("tableName", { length: 255 }),
     zone: varchar("zone", { length: 255 }), // Kept for backward compatibility
