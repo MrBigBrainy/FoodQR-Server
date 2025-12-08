@@ -2,7 +2,7 @@ import { db } from "../../drizzle/db.js";
 import { discounts } from "../../drizzle/schema.js";
 import { eq, and } from "drizzle-orm";
 
-export async function validateDiscountService({storeId, discountCode}) {
+export async function validateDiscountService({ storeId, discountCode }) {
   if (!discountCode || typeof discountCode !== "string") {
     const error = new Error("Discount Code is required");
     error.statusCode = 400;
