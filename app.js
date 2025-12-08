@@ -10,47 +10,32 @@ import errorMiddleware from './src/middlewares/error.middleware.js';
 import storeRouter from './src/router/store.route.js';
 import { discountRouter } from './src/router/discount.route.js';
 import http from 'http';
-import { Server } from 'socket.io';   
+import { Server } from 'socket.io';
 import { userOrderRouter } from "./src/router/userOrder.route.js";
+import socketHandler from './src/utils/socket/socketHandler.js';
 
 
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app); 
-const io = new Server(server, {
-  cors: {
-    origin: "*",   
-  },
-});
-io.on("connection", (socket) => {
-  console.log("A client connected:", socket.id);
-
-  socket.on("joinTable", ({ tableId }) => {
-    const roomName = `table-${tableId}`;
-    socket.join(roomName);
-    console.log(`Socket ${socket.id} joined ${roomName}`);
-  });
-
-  socket.on("leaveTable", ({ tableId }) => {
-    const roomName = `table-${tableId}`;
-    socket.leave(roomName);
-    console.log(`Socket ${socket.id} left ${roomName}`);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
-  });
-});
-
 
 app.use(express.json());
 app.use(cors());
+
+// socket io
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+    },
+});
+// กำหนดค่า io 
+app.set("io", io);
+
 //test
 // ─────────── TABLE ───────────//
 app.use('/api/admin/table-types', tableTypeRouter);
 app.use('/api/admin/tables', tableRouter);
-
 app.post('/api/omise', async (req, res) => {
     const omise = omiseFactory({
         secretKey: process.env.OMISE_SECRET_KEY,
@@ -109,6 +94,9 @@ app.use("/api/userOrder", userOrderRouter);
 app.use("/api/discount", discountRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRouter);
+
+// รวมคำสั่ง socket
+socketHandler(io);
 
 app.use(errorMiddleware);
 

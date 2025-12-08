@@ -179,24 +179,24 @@ export const menuTypesRelations = relations(menuTypes, ({ one, many }) => ({
 
 export const discountTypeEnum = mysqlEnum("discountType", ["percent", "baht"]);
 export const discounts = mysqlTable("Discount", {
-  id: int("id").primaryKey().autoincrement(),
-  code: varchar("code", { length: 255 }).notNull(),
-  discountType: discountTypeEnum.notNull().default("percent"), 
-  amount: int("amount").notNull(), 
-  maxCount: int("maxCount"), 
-  count: int("count").notNull().default(0), 
-  startTime: datetime("startTime"),
-  endTime: datetime("endTime"),
-  isActive: boolean("isActive").notNull().default(true),
-  storeId: int("storeId").notNull(),
-},(table) => {
+    id: int("id").primaryKey().autoincrement(),
+    code: varchar("code", { length: 255 }).notNull(),
+    discountType: discountTypeEnum.notNull().default("percent"),
+    amount: int("amount").notNull(),
+    maxCount: int("maxCount"),
+    count: int("count").notNull().default(0),
+    startTime: datetime("startTime"),
+    endTime: datetime("endTime"),
+    isActive: boolean("isActive").notNull().default(true),
+    storeId: int("storeId").notNull(),
+}, (table) => {
     return {
-      codeStoreUnique: uniqueIndex("code_store_unique").on(
-        table.code,
-        table.storeId
-      ),
+        codeStoreUnique: uniqueIndex("code_store_unique").on(
+            table.code,
+            table.storeId
+        ),
     };
-  });
+});
 
 export const discountsRelations = relations(discounts, ({ one, many }) => ({
     store: one(stores, {
@@ -207,7 +207,7 @@ export const discountsRelations = relations(discounts, ({ one, many }) => ({
 }));
 
 // ─────────── ORDER ───────────
-export const orders = mysqlTable("Order", {
+export const orders = mysqlTable("Orders", {
     id: int("id").primaryKey().autoincrement(),
     tableId: int("tableId").notNull(),
     userOrderId: int("userOrderId"),
