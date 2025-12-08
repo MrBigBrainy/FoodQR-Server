@@ -123,6 +123,18 @@ tableController.updateTable = async (req, res, next) => {
   });
 };
 
+// UPDATE TABLE STATUS
+tableController.updateTableStatus = async (req, res, next) => {
+  const { status, tableId, storeId} = req.body;
+
+  const { table } = await tableService.updateTableStatus(tableId, status, storeId);
+
+  res.status(200).json({
+    message: 'update table status',
+    table,
+  });
+};
+
 // DELETE TABLE
 tableController.deleteTable = async (req, res, next) => {
   const id = Number(req.params.id);
