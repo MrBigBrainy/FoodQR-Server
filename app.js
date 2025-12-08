@@ -20,6 +20,18 @@ dotenv.config();
 
 const app = express();
 
+
+
+app.use(express.json());
+app.use(cors());
+
+// socket io
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+    },
+});
 io.on("connection", (socket) => {
     console.log("A client connected:", socket.id);
 
@@ -38,17 +50,6 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log("Client disconnected:", socket.id);
     });
-});
-
-app.use(express.json());
-app.use(cors());
-
-// socket io
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-    },
 });
 // กำหนดค่า io 
 app.set("io", io);

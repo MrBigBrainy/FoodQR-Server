@@ -15,7 +15,6 @@ export const salesToday = async (req, res) => {
             // order ชื่อ table.colum ที่ใช้
             total: orders.total,
             openTime: orders.openTime,
-            userOrderId: orders.userOrderId,
             tableId: orders.tableId,
         })
         .from(orders)
@@ -37,7 +36,6 @@ export const createOrder = async (req, res) => {
         // เพิ่มข้อมูลเข้า
         await db.insert(orders).values({
             tableId: Number(tableId),
-            orderUserId: Number(orderUserId),
             subtotal: Number(subtotal),
             total: Number(total),
             discountId: Number(discountId),
