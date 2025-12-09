@@ -202,11 +202,9 @@ tableService.updateTableStatus = async (tableId, status, storeId) => {
     );
 
   return {
-    table: {
-      id: tableId,
-      status,
-      storeId,
-    },
+    tableId,
+    status,
+    storeId,
   };
 };
 
