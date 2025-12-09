@@ -19,7 +19,15 @@ import orderRouter from "./src/router/order.route.js";
 dotenv.config();
 
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173", // frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
+
 
 const server = http.createServer(app);
 export const io = new Server(server, {
