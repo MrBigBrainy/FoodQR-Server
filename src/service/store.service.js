@@ -57,4 +57,19 @@ storeService.updateStoreById = async (id, data) => {
   };
 };
 
+// --- delete store by id ---
+storeService.deleteStoreById = async (id) => {
+  // ดึงมาก่อนเพื่อเช็คว่ามีจริงไหม
+  const existing = await db.select().from(stores).where(eq(stores.id, id));
+
+  if (!existing[0]) {
+    return { store: null };
+  }
+
+  // ลบข้อมูล
+  await db.delete(stores).where(eq(stores.id, id));
+
+  // ส่งค่าที่ถูกลบกลับไป
+  return { store: existing[0] };
+};
 export { storeService };
