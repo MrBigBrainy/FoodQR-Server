@@ -18,13 +18,18 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app); 
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: {
     origin: "*",   
   },
 });
 io.on("connection", (socket) => {
   console.log("A client connected:", socket.id);
+
+  socket.on("joinStore", ({ storeId }) => {
+    socket.join(`store-${storeId}`);
+    console.log(`Socket ${socket.id} joined store-${storeId}`);
+  })
 
   socket.on("joinTable", ({ tableId }) => {
     const roomName = `table-${tableId}`;
