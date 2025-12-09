@@ -19,10 +19,12 @@ import orderRouter from "./src/router/order.route.js";
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app); 
+app.use(express.json());
+
+const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {
-    origin: "*",   
+    origin: "*",
   },
 });
 io.on("connection", (socket) => {
@@ -58,57 +60,57 @@ app.use("/api/admin/table-types", tableTypeRouter);
 app.use("/api/admin/tables", tableRouter);
 
 app.post("/api/omise", async (req, res) => {
-    const omise = omiseFactory({
-        secretKey: process.env.OMISE_SECRET_KEY,
-        omiseVersion: "2019-05-29",
-    });
+  const omise = omiseFactory({
+    secretKey: process.env.OMISE_SECRET_KEY,
+    omiseVersion: "2019-05-29",
+  });
 
-    try {
-        const sourceOmise = req.body.source;
+  try {
+    const sourceOmise = req.body.source;
 
-        if (!sourceOmise) {
-            return res.status(400).json({ error: "source is required" });
-        }
-
-        const createCharge = (source, amount, orderId) => {
-            return new Promise((resolve, reject) => {
-                omise.charges.create(
-                    {
-                        amount: amount * 100,
-                        currency: "THB",
-                        return_uri: "http://localhost:5173/",
-                        metadata: { orderId },
-                        source,
-                    },
-                    (err, resp) => {
-                        if (err) return reject(err);
-                        resolve(resp);
-                    }
-                );
-            });
-        };
-
-        const omiseResponse = await createCharge(sourceOmise, 100, 1);
-
-        const additionalDataToStoreInSchema = {
-            payment_method: "promptpay",
-            chargeId: omiseResponse.id,
-        };
-        console.log("omiseResponse", omiseResponse);
-
-        return res.json({
-            qrUrl: omiseResponse.source.scannable_code.image.download_uri,
-            amount: omiseResponse.amount,
-            status: omiseResponse.status,
-            chargeId: omiseResponse.id,
-        });
-    } catch (err) {
-        console.error("Omise charge error:", err);
-        return res.status(500).json({
-            message: "Omise charge failed",
-            error: err?.message ?? err,
-        });
+    if (!sourceOmise) {
+      return res.status(400).json({ error: "source is required" });
     }
+
+    const createCharge = (source, amount, orderId) => {
+      return new Promise((resolve, reject) => {
+        omise.charges.create(
+          {
+            amount: amount * 100,
+            currency: "THB",
+            return_uri: "http://localhost:5173/",
+            metadata: { orderId },
+            source,
+          },
+          (err, resp) => {
+            if (err) return reject(err);
+            resolve(resp);
+          }
+        );
+      });
+    };
+
+    const omiseResponse = await createCharge(sourceOmise, 100, 1);
+
+    const additionalDataToStoreInSchema = {
+      payment_method: "promptpay",
+      chargeId: omiseResponse.id,
+    };
+    console.log("omiseResponse", omiseResponse);
+
+    return res.json({
+      qrUrl: omiseResponse.source.scannable_code.image.download_uri,
+      amount: omiseResponse.amount,
+      status: omiseResponse.status,
+      chargeId: omiseResponse.id,
+    });
+  } catch (err) {
+    console.error("Omise charge error:", err);
+    return res.status(500).json({
+      message: "Omise charge failed",
+      error: err?.message ?? err,
+    });
+  }
 });
 app.use("/api/store", storeRouter);
 app.use("/api/userOrder", userOrderRouter);

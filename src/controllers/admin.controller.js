@@ -26,7 +26,7 @@ export const salesToday = async (req, res) => {
 // เพิ่ม order เข้า db
 export const createOrder = async (req, res) => {
     try {
-        const { tableId, orderUserId, subtotal, total, discountId, status, billId, userOrderId } = req.body;
+        const { tableId, subtotal, total, discountId, status, billId, userOrderId } = req.body;
         console.log(req.body);
         // วันนี้
         const today = new Date();
