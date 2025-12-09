@@ -19,37 +19,35 @@ import orderRouter from "./src/router/order.route.js";
 dotenv.config();
 
 const app = express();
-
-
-
-app.use(express.json());
-app.use(cors());
-
-// socket io
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "*",
-    },
+const server = http.createServer(app); 
+export const io = new Server(server, {
+  cors: {
+    origin: "*",   
+  },
 });
 io.on("connection", (socket) => {
-    console.log("A client connected:", socket.id);
+  console.log("A client connected:", socket.id);
 
-    socket.on("joinTable", ({ tableId }) => {
-        const roomName = `table-${tableId}`;
-        socket.join(roomName);
-        console.log(`Socket ${socket.id} joined ${roomName}`);
-    });
+  socket.on("joinStore", ({ storeId }) => {
+    socket.join(`store-${storeId}`);
+    console.log(`Socket ${socket.id} joined store-${storeId}`);
+  })
 
-    socket.on("leaveTable", ({ tableId }) => {
-        const roomName = `table-${tableId}`;
-        socket.leave(roomName);
-        console.log(`Socket ${socket.id} left ${roomName}`);
-    });
+  socket.on("joinTable", ({ tableId }) => {
+    const roomName = `table-${tableId}`;
+    socket.join(roomName);
+    console.log(`Socket ${socket.id} joined ${roomName}`);
+  });
 
-    socket.on("disconnect", () => {
-        console.log("Client disconnected:", socket.id);
-    });
+  socket.on("leaveTable", ({ tableId }) => {
+    const roomName = `table-${tableId}`;
+    socket.leave(roomName);
+    console.log(`Socket ${socket.id} left ${roomName}`);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  });
 });
 // กำหนดค่า io 
 app.set("io", io);
