@@ -1,6 +1,7 @@
 export const validateBody = (schema) => (req, res, next) => {
   try {
     req.body = schema.parse(req.body);
+    // console.log(req.body);
     next();
   } catch (error) {
     next(error);

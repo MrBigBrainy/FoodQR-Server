@@ -17,6 +17,7 @@ export const registerService = async (data) => {
     confirmPassword,
     adminCode,
   } = data;
+  console.log(data);
 
   console.log('ADMIN_SECRET_CODE =', process.env.ADMIN_SECRET_CODE);
 
