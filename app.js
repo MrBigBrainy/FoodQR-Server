@@ -61,17 +61,17 @@ app.set('io', io);
 app.use('/api/admin/table-types', tableTypeRouter);
 app.use('/api/admin/tables', tableRouter);
 
-app.post('/api/omise', async (req, res) => {
+app.post("/api/omise", async (req, res) => {
   const omise = omiseFactory({
     secretKey: process.env.OMISE_SECRET_KEY,
-    omiseVersion: '2019-05-29',
+    omiseVersion: "2019-05-29",
   });
 
   try {
     const sourceOmise = req.body.source;
 
     if (!sourceOmise) {
-      return res.status(400).json({ error: 'source is required' });
+      return res.status(400).json({ error: "source is required" });
     }
 
     const createCharge = (source, amount, orderId) => {
@@ -79,8 +79,8 @@ app.post('/api/omise', async (req, res) => {
         omise.charges.create(
           {
             amount: amount * 100,
-            currency: 'THB',
-            return_uri: 'http://localhost:5173/',
+            currency: "THB",
+            return_uri: "http://localhost:5173/",
             metadata: { orderId },
             source,
           },
@@ -95,10 +95,10 @@ app.post('/api/omise', async (req, res) => {
     const omiseResponse = await createCharge(sourceOmise, 100, 1);
 
     const additionalDataToStoreInSchema = {
-      payment_method: 'promptpay',
+      payment_method: "promptpay",
       chargeId: omiseResponse.id,
     };
-    console.log('omiseResponse', omiseResponse);
+    console.log("omiseResponse", omiseResponse);
 
     return res.json({
       qrUrl: omiseResponse.source.scannable_code.image.download_uri,
@@ -107,9 +107,9 @@ app.post('/api/omise', async (req, res) => {
       chargeId: omiseResponse.id,
     });
   } catch (err) {
-    console.error('Omise charge error:', err);
+    console.error("Omise charge error:", err);
     return res.status(500).json({
-      message: 'Omise charge failed',
+      message: "Omise charge failed",
       error: err?.message ?? err,
     });
   }
