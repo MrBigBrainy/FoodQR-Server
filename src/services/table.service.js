@@ -51,7 +51,7 @@
 
 import { db } from '../../drizzle/db.js';
 import { tables, tableTypes, zones, stores } from '../../drizzle/schema.js';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 const tableService = {};
 
@@ -183,6 +183,28 @@ tableService.updateTable = async (
       tableTypeId,
       storeId,
     },
+  };
+};
+
+// --- UPDATE TABLE STATUS ---
+tableService.updateTableStatus = async (tableId, status, storeId) => {
+  await db
+    .update(tables)
+    .set({
+      status,
+      storeId,
+    })
+    .where(
+      and(
+        eq(tables.id, tableId),
+        eq(tables.storeId, storeId)
+      )
+    );
+
+  return {
+    tableId,
+    status,
+    storeId,
   };
 };
 
