@@ -110,5 +110,27 @@ storeController.updatedStore = async (req, res, next) => {
     next(error);
   }
 };
+storeController.deleteStore = async (req, res, next) => {
+  try {
+    const id = Number(req.params.storeId);
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid storeId format' });
+    }
+
+    const { store } = await storeService.deleteStoreById(id);
+
+    if (!store) {
+      return res.status(404).json({ message: `Store ${id} not found` });
+    }
+
+    return res.status(200).json({
+      message: `Store ${id} deleted successfully`,
+      store,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export { storeController };
