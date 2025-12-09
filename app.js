@@ -19,6 +19,8 @@ import orderRouter from "./src/router/order.route.js";
 dotenv.config();
 
 const app = express();
+app.use(cors())
+app.use(express.json())
 const server = http.createServer(app); 
 export const io = new Server(server, {
   cors: {
