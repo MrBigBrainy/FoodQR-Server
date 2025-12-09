@@ -24,6 +24,7 @@ export const admins = mysqlTable("Admin", {
     username: varchar("username", { length: 255 }).notNull().unique(),
     password: varchar("password", { length: 255 }).notNull(),
     role: roleEnum.notNull().default("admin"),
+    storeId: int("store_id"), 
 });
 
 export const adminsRelations = relations(admins, ({ many }) => ({
@@ -38,7 +39,6 @@ export const stores = mysqlTable("Store", {
     vat: float("vat"),
     serviceCharge: float("serviceCharge"),
     createAt: timestamp("createAt").notNull().defaultNow(),
-    adminId: int("adminId").notNull(),
 });
 
 export const storesRelations = relations(stores, ({ one, many }) => ({
