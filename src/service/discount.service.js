@@ -2,9 +2,9 @@ import { db } from "../../drizzle/db.js";
 import { discounts } from "../../drizzle/schema.js";
 import { eq, and } from "drizzle-orm";
 
-export async function validateDiscountService({storeId, code}) {
-  if (!code || typeof code !== "string") {
-    const error = new Error("Discount code is required");
+export async function validateDiscountService({ storeId, discountCode }) {
+  if (!discountCode || typeof discountCode !== "string") {
+    const error = new Error("Discount Code is required");
     error.statusCode = 400;
     throw error;
   }
@@ -15,13 +15,13 @@ export async function validateDiscountService({storeId, code}) {
     throw error;
   }
 
-  const normalizedCode = code.trim().toUpperCase();
+  const normalizedCode = discountCode.trim().toUpperCase();
   const now = new Date();
 
   const whereClauses = [
-    eq(discounts.code, normalizedCode), 
-    eq(discounts.isActive, true), 
-    eq(discounts.storeId, Number(storeId))
+    eq(discounts.code, normalizedCode),
+    eq(discounts.isActive, true),
+    eq(discounts.storeId, Number(storeId)),
   ];
 
   const [discount] = await db
@@ -68,7 +68,7 @@ export async function validateDiscountService({storeId, code}) {
 
   return {
     id: discount.id,
-    code: discount.code,
+    discountCode: discount.code,
     discountType: discount.discountType,
     amount: discount.amount,
     storeId: discount.storeId,
@@ -76,7 +76,31 @@ export async function validateDiscountService({storeId, code}) {
     count: discount.count,
     startTime: discount.startTime,
     endTime: discount.endTime,
-    remainingUses
+    remainingUses,
   };
 }
 
+export async function addCoupon({
+  code,
+  discountType,
+  amount,
+  maxCount,
+  startTime,
+  endTime,
+  storeId,
+}) {
+  try {
+    const [newCoupon] = await db.insert(discounts).values({
+      code,
+      discountType,
+      amount,
+      maxCount,
+      startTime,
+      endTime,
+      storeId,
+    });
+    return newCoupon;
+  } catch (error) {
+    console.log(error);
+  }
+}

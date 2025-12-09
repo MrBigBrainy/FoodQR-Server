@@ -8,7 +8,9 @@ import {
     timestamp,
     datetime,
     mysqlEnum,
+    uniqueIndex,
 } from "drizzle-orm/mysql-core";
+import { sql } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 
 // ─────────── ENUMS ───────────
@@ -57,7 +59,7 @@ export const storesRelations = relations(stores, ({ one, many }) => ({
 // ─────────── TABLE TYPE ───────────
 export const tableTypes = mysqlTable("TableType", {
     id: int("id").primaryKey().autoincrement(),
-    nameType: varchar("nameType", { length: 255 }).notNull(),
+    nameType: varchar("nameType", { length: 255 }).notNull().unique(),
     minSeat: int("minSeat").notNull(),
     maxSeat: int("maxSeat").notNull(),
     storeId: int("storeId").notNull(),
@@ -74,7 +76,7 @@ export const tableTypesRelations = relations(tableTypes, ({ one, many }) => ({
 // ─────────── ZONE (New) ───────────
 export const zones = mysqlTable("Zone", {
     id: int("id").primaryKey().autoincrement(),
-    zoneName: varchar("zoneName", { length: 255 }).notNull(),
+    zoneName: varchar("zoneName", { length: 255 }).notNull().unique(),
     storeId: int("storeId").notNull(),
 });
 
@@ -156,7 +158,7 @@ export const menuRelations = relations(menu, ({ one, many }) => ({
         fields: [menu.menuTypeId],
         references: [menuTypes.id],
     }),
-    orderUsers: many(orderUsers),
+    userOrders: many(userOrders),
 }));
 
 // ─────────── MENUTYPE ───────────
@@ -179,7 +181,7 @@ export const menuTypesRelations = relations(menuTypes, ({ one, many }) => ({
 export const discountTypeEnum = mysqlEnum("discountType", ["percent", "baht"]);
 export const discounts = mysqlTable("Discount", {
   id: int("id").primaryKey().autoincrement(),
-  code: varchar("code", { length: 255 }).notNull().unique(),
+  code: varchar("code", { length: 255 }).notNull(),
   discountType: discountTypeEnum.notNull().default("percent"), 
   amount: int("amount").notNull(), 
   maxCount: int("maxCount"), 
@@ -188,7 +190,14 @@ export const discounts = mysqlTable("Discount", {
   endTime: datetime("endTime"),
   isActive: boolean("isActive").notNull().default(true),
   storeId: int("storeId").notNull(),
-});
+},(table) => {
+    return {
+      codeStoreUnique: uniqueIndex("code_store_unique").on(
+        table.code,
+        table.storeId
+      ),
+    };
+  });
 
 export const discountsRelations = relations(discounts, ({ one, many }) => ({
     store: one(stores, {
@@ -199,16 +208,17 @@ export const discountsRelations = relations(discounts, ({ one, many }) => ({
 }));
 
 // ─────────── ORDER ───────────
-export const orders = mysqlTable("Order", {
+export const orders = mysqlTable("Orders", {
     id: int("id").primaryKey().autoincrement(),
     tableId: int("tableId").notNull(),
-    orderUserId: int("orderUserId"),
-    openTime: datetime("openTime").notNull(),
+    storeId: int("storeId").notNull(),
+    customerCount: int("customerCount").notNull(),
+    openTime: datetime("openTime").notNull().default(sql`CURRENT_TIMESTAMP`),
     closeTime: datetime("closeTime"),
     subtotal: float("subtotal"),
     total: float("total"),
     discountId: int("discountId"),
-    status: varchar("status", { length: 255 }),
+    status: varchar("status", { length: 255 }).default("กำลังใช้งาน"),
     billId: int("billId"),
 });
 
@@ -221,7 +231,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
         fields: [orders.discountId],
         references: [discounts.id],
     }),
-    orderUsers: many(orderUsers),
+    userOrders: many(userOrders),
     bill: one(bills, {
         fields: [orders.billId],
         references: [bills.id],
@@ -229,7 +239,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
 }));
 
 // ─────────── ORDER USER ───────────
-export const orderUsers = mysqlTable("OrderUser", {
+export const userOrders = mysqlTable("UserOrder", {
     id: int("id").primaryKey().autoincrement(),
     menuId: int("menuId").notNull(),
     quantity: int("quantity").notNull(),
@@ -238,13 +248,13 @@ export const orderUsers = mysqlTable("OrderUser", {
     lineId: varchar("lineId", { length: 255 }),
 });
 
-export const orderUsersRelations = relations(orderUsers, ({ one }) => ({
+export const userOrdersRelations = relations(userOrders, ({ one }) => ({
     order: one(orders, {
-        fields: [orderUsers.orderId],
+        fields: [userOrders.orderId],
         references: [orders.id],
     }),
     menu: one(menu, {
-        fields: [orderUsers.menuId],
+        fields: [userOrders.menuId],
         references: [menu.id],
     }),
 }));
