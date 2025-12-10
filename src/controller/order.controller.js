@@ -9,12 +9,12 @@ export async function createOrder(req, res) {
     });
   }
   try {
-      const order = await createOrderService(data);
-      console.log(order)
+      const orderId = await createOrderService(data);
+      console.log("orderId",orderId)
 
     return res.status(201).json({
       message: "Create order",
-      data: order,
+      orderId,
     });
     
   } catch (err) {
