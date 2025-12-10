@@ -16,10 +16,10 @@ export const registerService = async (data) => {
     password,
     confirmPassword,
     adminCode,
+    storeId,
   } = data;
   console.log(data);
 
-  console.log('ADMIN_SECRET_CODE =', process.env.ADMIN_SECRET_CODE);
 
   // -------------------- 0) Check confirm password --------------------
   if (!confirmPassword || password !== confirmPassword) {
@@ -57,6 +57,7 @@ export const registerService = async (data) => {
     username: userName,
     phoneNumber,
     password: passwordHash,
+    storeId,
     role: 'admin',
   });
 

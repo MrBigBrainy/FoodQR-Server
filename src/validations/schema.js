@@ -26,6 +26,7 @@ export const registerSchema = z
       .max(50, 'Confirm password must be at most 50 characters'),
 
     adminCode: z.string().trim().min(1, 'Admin code is required'),
+    storeId: z.coerce.number().int().positive().default(1),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Confirm password must match password',
