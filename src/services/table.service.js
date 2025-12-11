@@ -199,7 +199,7 @@ tableService.updateTableStatus = async (tableId, status, storeId) => {
         eq(tables.id, tableId),
         eq(tables.storeId, storeId)
       )
-    );
+  );
 
   return {
     tableId,

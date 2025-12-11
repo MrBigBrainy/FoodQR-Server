@@ -48,7 +48,6 @@
 // export { tableController };
 
 import { tableService } from '../services/table.service.js';
-import { io } from '../../app.js';
 
 const tableController = {};
 
@@ -139,8 +138,8 @@ tableController.updateTableStatus = async (req, res, next) => {
   const { status, tableId, storeId } = req.body;
 
   const table = await tableService.updateTableStatus(tableId, status, storeId);
-
-  io.to(`store:${storeId}`).emit("tableStatusUpdated", table);
+  const io = req.app.get('io');
+  io.to(`store-${storeId}`).emit("tableStatusUpdated", table);
 
   res.status(200).json({
     success: true,
