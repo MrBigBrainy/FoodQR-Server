@@ -11,7 +11,6 @@ export async function getMenuByStoreId(storeId) {
       },
     });
     // const menuData = await db.query.menu.findMany();
-    console.log('menuData', menuData);
     return menuData;
   } catch (error) {
     console.log(error);
