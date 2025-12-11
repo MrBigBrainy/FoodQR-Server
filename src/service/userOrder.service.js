@@ -34,6 +34,9 @@ export async function getUserOrderByOrderIdService(orderId) {
   try {
     const userOrder = await db.query.userOrders.findMany({
       where: eq(userOrders.orderId, orderId),
+      with: {
+    menu: true,
+  }
     });
     return userOrder;
   } catch (error) {

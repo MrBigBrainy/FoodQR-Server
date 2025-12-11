@@ -147,6 +147,8 @@ export const userOrders = mysqlTable("UserOrder", {
   orderId: int("orderId").notNull(),
   note: text("note"),
   lineId: varchar("lineId", { length: 255 }),
+  displayName: varchar("displayName", { length: 255 }),
+  imageUrl: varchar("imageUrl", { length: 255 }),
 });
 
 // BILL
