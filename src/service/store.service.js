@@ -48,6 +48,7 @@ storeService.createStore = async (data) => {
 };
 // --- update by id ---
 storeService.updateStoreById = async (id, data) => {
+  console.log(data)
   await db.update(stores).set(data).where(eq(stores.id, id));
 
   const updated = await db.select().from(stores).where(eq(stores.id, id));
