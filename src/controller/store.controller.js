@@ -64,7 +64,6 @@ storeController.getStoreById = async (req, res, next) => {
     }
 
     res.status(200).json({
-      message: 'Get store by id successful',
       store,
     });
   } catch (error) {
