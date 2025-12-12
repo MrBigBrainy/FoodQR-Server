@@ -94,16 +94,14 @@ storeController.updatedStore = async (req, res, next) => {
     }
 
     const payload = req.body;
-
     const { store } = await storeService.updateStoreById(id, payload);
-
     if (!store) {
       return res.status(404).json({ message: `Store ${id} not found` });
     }
 
     return res.status(200).json({
       message: 'Store updated successfully',
-      store,
+      // store,
     });
   } catch (error) {
     next(error);
