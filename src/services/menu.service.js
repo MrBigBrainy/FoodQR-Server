@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../../drizzle/db.js";
-import { menu } from "../../drizzle/schema.js";
+import { menu, menuTypes } from "../../drizzle/schema.js";
 
 export const insertMenus = async (data) => {
   try {
@@ -16,7 +16,7 @@ export const insertMenus = async (data) => {
       imageUrl,
     } = data;
 
-    if (!name || !price || !netPrice || !categoryId || !storeId) {
+    if (!name || !price || !netPrice || !categoryId) {
       throw new Error("กรุณากรอกข้อมูลให้ครบ");
     }
 
@@ -28,7 +28,7 @@ export const insertMenus = async (data) => {
       netPrice: Number(netPrice),
       categoryId: Number(categoryId),
       storeId: Number(storeId),
-      menuTypeId: Number(menuTypeId),
+      menuTypeId: Number(menuTypeId) || null,
       imageUrl,
     });
 
@@ -99,6 +99,18 @@ export const deleteMenus = async (menuId, storeId) => {
       );
 
     return { deletedRows: result.rowsAffected };
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const getMenuById = async (storeId) => {
+  try {
+    const result = await db
+      .select()
+      .from(menu)
+      .where(eq(menu.storeId, storeId));
+    return result;
   } catch (err) {
     throw err;
   }

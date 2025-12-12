@@ -1,19 +1,38 @@
 import {
   deleteMenus,
+  getMenuById,
   insertMenus,
   updateMenus,
 } from "../services/menu.service.js";
 
 export const createMenu = async (req, res) => {
+  console.log("📂 req.file =", req.file);
+  console.log("📨 req.body =", req.body);
+
   const storeId = req.user?.storeId || req.body.storeId;
+  const file = req.file;
 
   if (!storeId) {
     return res
       .status(403)
       .json({ message: "Authentication is required to perform this action." });
   }
+  const menuData = {
+    ...req.body,
+    storeId: Number(storeId),
+    price: Number(req.body.price),
+    discount: Number(req.body.discount),
+    netPrice: Number(req.body.netPrice),
+    categoryId: Number(req.body.categoryId),
+    menuTypeId: Number(req.body.menuTypeId), // หรือต้องจัดการกรณีที่เป็น NaN
+  };
+  if (file) {
+    console.log("fileหกดหดกหด", file);
+    const imageUrl = `https://your-cloud.com/images/${file.originalname}`;
+    menuData.imageUrl = imageUrl;
+  }
   try {
-    const result = await insertMenus(req.body);
+    const result = await insertMenus(menuData);
     res.status(201).json({ message: " เพิ่มเมนูสำเร็จ!" });
   } catch (err) {
     console.error(" createMenu error:", err);
@@ -50,6 +69,7 @@ export const updateMenu = async (req, res) => {
       data: result,
     });
   } catch (err) {
+    console.error(err);
     if (err.message && err.message.includes("กรุณากรอกข้อมูล")) {
       return res.status(400).json({ message: err.message });
     }
@@ -81,4 +101,26 @@ export const deleteMenu = async (req, res) => {
     console.error("UpdateMenu error:", err);
     res.status(500).json({ message: "เกิดข้อผิดดพลาดในการอัพเดทข้อมูล" });
   }
+};
+
+export const getMenu = async (req, res) => {
+  res.send("----");
+  // const storeId = req.user?.storeId || req.body.storeId;
+  // if (!storeId) {
+  //   return res.status(403).json({ message: "StoreI is required" });
+  // }
+  // try {
+  //   const result = await getMenuById(storeId);
+  //   if (!menus || menus.length === 0) {
+  //     return res
+  //       .status(200)
+  //       .json({ message: "ไม่พบเมนูในร้านค้านี้", data: [] });
+  //   }
+  //   return res.status(200).json({
+  //     message: "ดึงเมนูสำเร็จ",
+  //     data: result,
+  //   });
+  // } catch (err) {
+  //   console.err("getMenu error");
+  // }
 };

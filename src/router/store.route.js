@@ -7,8 +7,10 @@ import {
 import {
   createMenu,
   deleteMenu,
+  getMenu,
   updateMenu,
 } from "../controller/menu.controller.js";
+import upload from "../config/upload.config.js";
 
 const storeRouter = Router();
 storeRouter.get("/:storeId", storeController.getStoreById);
@@ -20,10 +22,6 @@ storeRouter.get("/:storeId/menu", getStoreMenuController);
 storeRouter.get("/:storeId/category", getStoreCategoryController);
 
 ///ที่ฟูลทำ
-storeRouter.post("/createMenu", createMenu);
-storeRouter.delete("/deleteMenu/:menuId", deleteMenu);
-storeRouter.put("/updateMenu/:menuId", updateMenu);
-
 //Mock authสำหรับยิง postman เท่านั้น
 storeRouter.use((req, res, next) => {
   req.user = {
@@ -32,5 +30,10 @@ storeRouter.use((req, res, next) => {
   };
   next();
 });
+
+storeRouter.get("/menu", getMenu);
+storeRouter.post("/menu", upload.single("imageFile"), createMenu);
+storeRouter.delete("/menu/:id", deleteMenu);
+storeRouter.put("/menu/:id", updateMenu);
 
 export default storeRouter;
