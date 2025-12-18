@@ -54,11 +54,21 @@ const tableController = {};
 // GET ALL TABLES
 tableController.getAllTables = async (req, res, next) => {
   try {
+    const io = req.app.get("io");
     const { tables } = await tableService.getAllTables();
-    res.status(200).json({
-      message: 'get all tables successful',
-      tables,
-    });
+    console.log('tables', tables)
+
+    const sumTable = tables.length
+    const availableTable = tables.filter((each) => each.status === "available").length;
+
+
+    console.log('sumTable', sumTable)
+    console.log('availableTable', availableTable)
+    io.emit("updateTable", { sumTable, availableTable });
+
+    res.status(200).json(
+      tables
+    );
   } catch (error) {
     next(error);
   }
@@ -125,7 +135,7 @@ tableController.updateTable = async (req, res, next) => {
 
 // UPDATE TABLE STATUS
 tableController.updateTableStatus = async (req, res, next) => {
-  const { status, tableId, storeId} = req.body;
+  const { status, tableId, storeId } = req.body;
 
   const table = await tableService.updateTableStatus(tableId, status, storeId);
   const io = req.app.get('io');
