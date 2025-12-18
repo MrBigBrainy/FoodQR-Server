@@ -43,6 +43,7 @@ export const stores = mysqlTable("Store", {
   vat: float("vat"),
   serviceCharge: float("serviceCharge"),
   createAt: timestamp("createAt").notNull().defaultNow(),
+  logoUrl: varchar("logoUrl", { length: 255 }),
 });
 
 // TABLE TYPE
