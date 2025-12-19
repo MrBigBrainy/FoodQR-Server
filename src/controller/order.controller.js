@@ -2,6 +2,7 @@ import { createOrderService } from "../service/order.service.js";
 
 export async function createOrder(req, res) {
   const data = req.body;
+  console.log("data", data)
 
   if (!data) {
     return res.status(400).json({

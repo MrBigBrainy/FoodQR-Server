@@ -43,6 +43,7 @@ export const stores = mysqlTable("Store", {
   vat: float("vat"),
   serviceCharge: float("serviceCharge"),
   createAt: timestamp("createAt").notNull().defaultNow(),
+  logoUrl: varchar("logoUrl", { length: 255 }),
 });
 
 // TABLE TYPE
@@ -146,7 +147,10 @@ export const userOrders = mysqlTable("UserOrder", {
   quantity: int("quantity").notNull(),
   orderId: int("orderId").notNull(),
   note: text("note"),
+  orderTime: datetime("orderTime").default(sql`CURRENT_TIMESTAMP`),
   lineId: varchar("lineId", { length: 255 }),
+  displayName: varchar("displayName", { length: 255 }),
+  imageUrl: varchar("imageUrl", { length: 255 }),
 });
 
 // BILL
