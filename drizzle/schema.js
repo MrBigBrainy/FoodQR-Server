@@ -147,6 +147,7 @@ export const userOrders = mysqlTable("UserOrder", {
   quantity: int("quantity").notNull(),
   orderId: int("orderId").notNull(),
   note: text("note"),
+  orderTime: datetime("orderTime").default(sql`CURRENT_TIMESTAMP`),
   lineId: varchar("lineId", { length: 255 }),
   displayName: varchar("displayName", { length: 255 }),
   imageUrl: varchar("imageUrl", { length: 255 }),
