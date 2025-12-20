@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
 
   socket.on("joinStore", ({ storeId }) => {
     socket.join(`store-${storeId}`);
-    console.log(`Socket ${socket.id} joined store-${storeId}`);
+    console.log(`NEW Socket ${socket.id} joined store-${storeId}`);
   });
 
   socket.on("joinTable", ({ tableId }) => {

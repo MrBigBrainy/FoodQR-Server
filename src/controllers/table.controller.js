@@ -135,11 +135,15 @@ tableController.updateTable = async (req, res, next) => {
 
 // UPDATE TABLE STATUS
 tableController.updateTableStatus = async (req, res, next) => {
+   console.log("🔥 updateTableStatus HIT");
   const { status, tableId, storeId } = req.body;
 
   const table = await tableService.updateTableStatus(tableId, status, storeId);
   const io = req.app.get('io');
-  io.to(`store-${storeId}`).emit("tableStatusUpdated", table);
+  console.log('io exists:', !!io);
+  console.log('io.sockets:', io?.sockets?.sockets?.size);
+
+  io.emit("tableStatusUpdated", table);
 
   res.status(200).json({
     success: true,

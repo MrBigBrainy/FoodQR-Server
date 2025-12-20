@@ -1,7 +1,7 @@
 import { addToOrder, getUserOrderByOrderIdService} from "../service/userOrder.service.js";
 
 export async function createUserOrder(req, res) {
-  const { menuId, quantity, orderId, note, lineId } = req.body;
+  const { menuId, quantity, orderId, note, lineId, displayName, imageUrl } = req.body;
   console.log(req.body)
 
   // if (!menuId || !quantity || !orderId || !lineId) {
@@ -21,6 +21,9 @@ export async function createUserOrder(req, res) {
       quantity,
       orderId: orderId || null,
       note: note || "",
+      lineId,
+      displayName,
+      imageUrl
     };
     const updatedOrder = await addToOrder(orderItem);
 
