@@ -28,6 +28,7 @@ export async function createOrder(req, res) {
 export async function updateOrder(req, res) {
   const data = req.body;
   const orderId = req.params.orderId;
+
   console.log('update order data', data)
 
    if (!data) {
@@ -40,6 +41,7 @@ export async function updateOrder(req, res) {
     const updatedOrder = await updateOrderService(data, orderId);
     console.log('updatedOrder', updatedOrder)
     return res.status(200).json({
+      success: true,
       message: "Update order",
       updatedOrder,
     });
