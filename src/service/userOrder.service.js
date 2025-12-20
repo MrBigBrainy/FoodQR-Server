@@ -2,7 +2,7 @@ import { db } from "../../drizzle/db.js";
 import { userOrders } from "../../drizzle/schema.js";
 import { eq } from "drizzle-orm";
 
-export async function addToOrder({ menuId, quantity, orderId, note, lineId }) {
+export async function addToOrder({ menuId, quantity, orderId, note, lineId, displayName, imageUrl }) {
   console.log("test");
   try {
     const [newItem] = await db.insert(userOrders).values({
@@ -11,6 +11,8 @@ export async function addToOrder({ menuId, quantity, orderId, note, lineId }) {
       orderId,
       note,
       lineId,
+      displayName,
+      imageUrl
     });
 
     return newItem;
